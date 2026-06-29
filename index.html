@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GV TECKNOLOGISTIC">
+<meta name="theme-color" content="#0D2D5E">
+<title>GV · TECKNOLOGISTIC S.A.</title>
+<style>
+/* ═══════════════════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════════════════ */
+:root {
+  --navy:   #0D2D5E;
+  --blue:   #1A5EA8;
+  --steel:  #2E75B6;
+  --sky:    #5BA3D9;
+  --light:  #D6E4F7;
+  --xlight: #EBF3FB;
+  --off:    #F4F7FC;
+  --white:  #FFFFFF;
+  --dgray:  #1E2A3A;
+  --mgray:  #6B7A8D;
+  --lgray:  #E2E8F0;
+  --red:    #C0392B;
+  --redbg:  #FEF2F2;
+  --orange: #D35400;
+  --orbg:   #FFF7ED;
+  --yellow: #B45309;
+  --ylbg:   #FFFBEB;
+  --green:  #166534;
+  --grbg:   #F0FDF4;
+  --grmed:  #16A34A;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+  --topbar-h: 56px;
+  --tab-h: 60px;
+  --radius: 12px;
+  --shadow: 0 2px 12px rgba(0,0,0,.10);
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESET + BASE
+═══════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { height: 100%; background: var(--navy); }
+body {
+  font-family: -apple-system, 'SF Pro Text', 'Segoe UI', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--dgray);
+  background: var(--off);
+  min-height: 100%;
+  overscroll-behavior: none;
+}
+input, select, textarea, button { font-family: inherit; font-size: inherit; }
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--steel); outline-offset: 1px; }
+
+/* ═══════════════════════════════════════════════════════
+   TOPBAR
+═══════════════════════════════════════════════════════ */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: calc(var(--topbar-h) + var(--safe-top));
+  padding-top: var(--safe-top);
+  background: var(--navy);
+  display: flex; align-items: center; gap: 12px; padding-left: 16px; padding-right: 16px;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,.3);
+}
+#topbar .brand { font-size: 13px; font-weight: 700; color: #fff; letter-spacing: .3px; flex: 1; }
+#topbar .brand span { color: var(--sky); font-size: 11px; font-weight: 500; display: block; }
+.gv-badge {
+  background: var(--red); color: #fff;
+  font-size: 11px; font-weight: 700; padding: 4px 10px;
+  border-radius: 20px; letter-spacing: .3px; white-space: nowrap;
+  display: none;
+}
+.gv-badge.visible { display: block; }
+
+/* ═══════════════════════════════════════════════════════
+   TAB BAR (bottom)
+═══════════════════════════════════════════════════════ */
+#tabbar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: calc(var(--tab-h) + var(--safe-bot));
+  padding-bottom: var(--safe-bot);
+  background: var(--navy);
+  display: flex; border-top: 1px solid rgba(255,255,255,.1);
+  z-index: 1000;
+}
+.tab-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,.5); font-size: 10px; font-weight: 600;
+  padding: 8px 4px; transition: color .18s;
+  text-transform: uppercase; letter-spacing: .4px;
+}
+.tab-btn .icon { font-size: 20px; line-height: 1; }
+.tab-btn.active { color: var(--sky); }
+
+/* ═══════════════════════════════════════════════════════
+   MAIN CONTENT
+═══════════════════════════════════════════════════════ */
+#app {
+  margin-top: calc(var(--topbar-h) + var(--safe-top));
+  padding-bottom: calc(var(--tab-h) + var(--safe-bot) + 16px);
+  min-height: calc(100vh - var(--topbar-h));
+}
+
+/* Tabs */
+.tab-page { display: none; padding: 16px; }
+.tab-page.active { display: block; }
+
+/* ═══════════════════════════════════════════════════════
+   CARDS / SECTIONS
+═══════════════════════════════════════════════════════ */
+.card {
+  background: var(--white); border-radius: var(--radius);
+  box-shadow: var(--shadow); margin-bottom: 14px; overflow: hidden;
+}
+.card-head {
+  padding: 12px 16px;
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  color: var(--white); display: flex; align-items: center; gap: 8px;
+}
+.card-head .ico { font-size: 16px; }
+.card-body { padding: 16px; }
+.ch-navy   { background: var(--navy); }
+.ch-blue   { background: var(--blue); }
+.ch-steel  { background: var(--steel); }
+.ch-red    { background: var(--red); }
+.ch-green  { background: var(--grmed); }
+.ch-orange { background: var(--orange); }
+
+/* ═══════════════════════════════════════════════════════
+   FORM FIELDS
+═══════════════════════════════════════════════════════ */
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field-grid.cols1 { grid-template-columns: 1fr; }
+.field-grid.cols3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label {
+  font-size: 11px; font-weight: 700; color: var(--mgray);
+  text-transform: uppercase; letter-spacing: .6px;
+}
+.field input, .field select, .field textarea {
+  border: 1.5px solid var(--lgray); border-radius: 8px;
+  padding: 10px 12px; font-size: 14px; color: var(--dgray);
+  background: var(--white); transition: border-color .15s;
+  -webkit-appearance: none; appearance: none;
+  width: 100%;
+}
+.field input:focus, .field select:focus { border-color: var(--steel); }
+.field textarea { resize: vertical; min-height: 72px; }
+.field.required label::after { content: ' *'; color: var(--red); }
+
+/* ═══════════════════════════════════════════════════════
+   ALCOCHECK DISPLAY
+═══════════════════════════════════════════════════════ */
+.alco-display {
+  text-align: center; padding: 20px 16px;
+  border-radius: 10px; margin: 12px 0;
+  transition: background .3s, color .3s;
+}
+.alco-display.ok  { background: var(--grbg); border: 2px solid var(--grmed); }
+.alco-display.nok { background: var(--redbg); border: 2px solid var(--red); }
+.alco-value {
+  font-size: 52px; font-weight: 800; letter-spacing: -1px;
+  font-variant-numeric: tabular-nums; line-height: 1;
+}
+.alco-display.ok  .alco-value { color: var(--green); }
+.alco-display.nok .alco-value { color: var(--red); }
+.alco-unit { font-size: 14px; font-weight: 600; color: var(--mgray); margin-top: 4px; }
+.alco-status {
+  margin-top: 10px; font-size: 13px; font-weight: 700; padding: 6px 14px;
+  border-radius: 20px; display: inline-block;
+}
+.alco-display.ok  .alco-status { background: var(--grmed); color: #fff; }
+.alco-display.nok .alco-status { background: var(--red); color: #fff; }
+.alco-slider {
+  width: 100%; margin: 12px 0;
+  -webkit-appearance: none; appearance: none;
+  height: 6px; border-radius: 3px; background: var(--lgray);
+  outline: none;
+}
+.alco-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 28px; height: 28px;
+  border-radius: 50%; background: var(--steel); cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,.2);
+}
+
+/* ═══════════════════════════════════════════════════════
+   FATIGA — Toggle Sí/No
+═══════════════════════════════════════════════════════ */
+.fatiga-item {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--lgray);
+}
+.fatiga-item:last-child { border-bottom: none; }
+.fatiga-q { font-size: 13px; color: var(--dgray); flex: 1; line-height: 1.4; }
+.toggle-group { display: flex; border-radius: 8px; overflow: hidden; border: 1.5px solid var(--lgray); flex-shrink: 0; }
+.toggle-group button {
+  padding: 7px 14px; font-size: 12px; font-weight: 700;
+  background: var(--white); color: var(--mgray); border: none; cursor: pointer;
+  transition: background .15s, color .15s; line-height: 1;
+}
+.toggle-group button.si.active  { background: var(--grmed); color: #fff; }
+.toggle-group button.no.active  { background: var(--red); color: #fff; }
+.toggle-group button:not(.active):hover { background: var(--lgray); }
+
+/* ═══════════════════════════════════════════════════════
+   MATRIZ RIESGOS
+═══════════════════════════════════════════════════════ */
+.risk-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.risk-table thead tr { background: var(--navy); }
+.risk-table thead th {
+  padding: 8px 10px; color: #fff; font-weight: 700;
+  font-size: 11px; text-transform: uppercase; letter-spacing: .4px;
+  text-align: left; white-space: nowrap;
+}
+.risk-table tbody td { padding: 8px 10px; border-bottom: 1px solid var(--lgray); vertical-align: middle; }
+.risk-table tbody tr:nth-child(even) td { background: var(--xlight); }
+.risk-table tbody tr:nth-child(odd) td { background: var(--white); }
+.risk-table tbody tr:last-child td { border-bottom: none; }
+.risk-table input[type=number] {
+  width: 48px; text-align: center; border: 1.5px solid var(--lgray);
+  border-radius: 6px; padding: 5px 4px; font-size: 13px; font-weight: 700;
+}
+.risk-pill {
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; white-space: nowrap; min-width: 72px; text-align: center;
+}
+.risk-bajo    { background: #DCFCE7; color: #166534; }
+.risk-medio   { background: #FEF9C3; color: #854D0E; }
+.risk-alto    { background: #FFEDD5; color: #9A3412; }
+.risk-critico { background: #FEE2E2; color: #991B1B; }
+.tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; }
+
+/* ═══════════════════════════════════════════════════════
+   ESTADO GLOBAL
+═══════════════════════════════════════════════════════ */
+.estado-banner {
+  border-radius: 10px; padding: 16px 20px; margin: 14px 0;
+  font-weight: 700; font-size: 15px; text-align: center;
+  border-width: 2px; border-style: solid;
+  transition: all .3s;
+}
+.estado-ok      { background: var(--grbg);  border-color: var(--grmed); color: var(--green); }
+.estado-warn    { background: var(--orbg);  border-color: var(--orange); color: var(--orange); }
+.estado-block   { background: var(--redbg); border-color: var(--red);   color: var(--red); }
+.estado-neutral { background: var(--xlight); border-color: var(--steel); color: var(--navy); }
+
+/* ═══════════════════════════════════════════════════════
+   BTN
+═══════════════════════════════════════════════════════ */
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 15px 20px; border-radius: 10px; border: none;
+  font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: .3px;
+  transition: transform .1s, opacity .15s; -webkit-user-select: none;
+}
+.btn:active { transform: scale(.97); opacity: .9; }
+.btn-approve { background: var(--grmed); color: #fff; }
+.btn-reject  { background: var(--red);   color: #fff; }
+.btn-clear   { background: var(--lgray); color: var(--dgray); }
+.btn-export  { background: var(--navy);  color: #fff; }
+.btn-sm {
+  padding: 9px 16px; font-size: 13px; border-radius: 8px; width: auto;
+}
+.btn-row { display: flex; gap: 10px; margin-top: 14px; }
+.btn-row .btn { flex: 1; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+/* ═══════════════════════════════════════════════════════
+   KPI CARDS (dashboard)
+═══════════════════════════════════════════════════════ */
+.kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.kpi-card {
+  background: var(--white); border-radius: var(--radius); padding: 16px;
+  box-shadow: var(--shadow); border-top: 4px solid var(--steel);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.kpi-card .kn { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--mgray); }
+.kpi-card .kv { font-size: 32px; font-weight: 800; color: var(--navy); line-height: 1.1; }
+.kpi-card .ks { font-size: 11px; color: var(--mgray); }
+.kpi-card.kpi-green  { border-top-color: var(--grmed); }
+.kpi-card.kpi-red    { border-top-color: var(--red); }
+.kpi-card.kpi-orange { border-top-color: var(--orange); }
+
+/* ═══════════════════════════════════════════════════════
+   HISTORIAL
+═══════════════════════════════════════════════════════ */
+.hist-item {
+  background: var(--white); border-radius: 10px; padding: 14px 16px;
+  margin-bottom: 10px; box-shadow: var(--shadow);
+  border-left: 4px solid var(--lgray);
+  cursor: pointer; transition: box-shadow .15s;
+}
+.hist-item:active { box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+.hist-item.approved { border-left-color: var(--grmed); }
+.hist-item.rejected { border-left-color: var(--red); }
+.hist-gv { font-size: 13px; font-weight: 700; color: var(--navy); font-family: 'SF Mono', 'Courier New', monospace; }
+.hist-info { font-size: 12px; color: var(--mgray); margin-top: 3px; }
+.hist-badge {
+  font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 12px;
+  float: right; margin-top: 2px;
+}
+.approved .hist-badge { background: var(--grbg); color: var(--green); }
+.rejected .hist-badge { background: var(--redbg); color: var(--red); }
+
+/* ═══════════════════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  display: flex; align-items: flex-end; justify-content: center;
+  z-index: 2000; opacity: 0; pointer-events: none;
+  transition: opacity .25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--white); border-radius: 20px 20px 0 0;
+  width: 100%; max-width: 640px; padding: 24px 20px;
+  padding-bottom: calc(24px + var(--safe-bot));
+  transform: translateY(100%); transition: transform .3s cubic-bezier(.32,.72,0,1);
+  max-height: 90vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-handle { width: 40px; height: 4px; background: var(--lgray); border-radius: 2px; margin: 0 auto 20px; }
+.modal-title { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 16px; }
+
+/* ═══════════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════════ */
+#toast {
+  position: fixed; bottom: calc(var(--tab-h) + var(--safe-bot) + 16px); left: 16px; right: 16px;
+  background: var(--dgray); color: #fff;
+  padding: 14px 18px; border-radius: 12px; font-size: 13px; font-weight: 600;
+  text-align: center; z-index: 3000;
+  transform: translateY(20px); opacity: 0;
+  transition: transform .25s, opacity .25s;
+  pointer-events: none;
+}
+#toast.show { transform: translateY(0); opacity: 1; }
+#toast.toast-ok  { background: var(--grmed); }
+#toast.toast-err { background: var(--red); }
+
+/* ═══════════════════════════════════════════════════════
+   DESKTOP LAYOUT (≥768px)
+═══════════════════════════════════════════════════════ */
+@media (min-width: 768px) {
+  :root { --topbar-h: 60px; }
+  body { background: var(--xlight); }
+  #topbar { padding-left: 32px; padding-right: 32px; }
+  #topbar .brand { font-size: 15px; }
+  #topbar .brand span { font-size: 12px; }
+  
+  #tabbar {
+    top: calc(var(--topbar-h) + var(--safe-top));
+    bottom: auto;
+    height: auto;
+    flex-direction: column;
+    width: 220px; left: 0; right: auto;
+    border-top: none; border-right: 1px solid rgba(255,255,255,.1);
+    padding: 12px 0; padding-bottom: 0;
+  }
+  .tab-btn {
+    flex-direction: row; justify-content: flex-start;
+    padding: 12px 20px; gap: 12px; font-size: 12px; border-radius: 0;
+    border-left: 3px solid transparent;
+  }
+  .tab-btn.active { border-left-color: var(--sky); background: rgba(255,255,255,.08); }
+  .tab-btn .icon { font-size: 18px; }
+  
+  #app {
+    margin-left: 220px;
+    margin-top: calc(var(--topbar-h) + var(--safe-top));
+    padding-bottom: 40px;
+  }
+  .tab-page { padding: 24px 32px; max-width: 900px; }
+  
+  .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+  .modal { border-radius: 20px; margin: auto; margin-bottom: 0; max-width: 560px; }
+  .modal-overlay { align-items: center; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   PRINT
+═══════════════════════════════════════════════════════ */
+@media print {
+  #topbar, #tabbar, .btn, .btn-row { display: none !important; }
+  #app { margin: 0 !important; padding: 0 !important; }
+  .tab-page { display: block !important; padding: 16px !important; }
+  .card { box-shadow: none !important; border: 1px solid #ddd; }
+}
+
+/* divider */
+.divider { height: 1px; background: var(--lgray); margin: 14px 0; }
+.section-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--mgray); margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════ TOPBAR ════════════ -->
+<header id="topbar">
+  <div class="brand">
+    TECKNOLOGISTIC S.A.
+    <span>Sistema de Gerenciamiento de Viajes — PR-5.1-OP-1</span>
+  </div>
+  <div class="gv-badge" id="gvBadgeTop">GV-...</div>
+</header>
+
+<!-- ════════════ TABBAR ════════════ -->
+<nav id="tabbar">
+  <button class="tab-btn active" data-tab="nuevo" onclick="switchTab('nuevo',this)">
+    <span class="icon">📋</span><span>Nuevo GV</span>
+  </button>
+  <button class="tab-btn" data-tab="riesgos" onclick="switchTab('riesgos',this)">
+    <span class="icon">⚠️</span><span>IPERC</span>
+  </button>
+  <button class="tab-btn" data-tab="decision" onclick="switchTab('decision',this)">
+    <span class="icon">✅</span><span>Decisión</span>
+  </button>
+  <button class="tab-btn" data-tab="historial" onclick="switchTab('historial',this)">
+    <span class="icon">🗄</span><span>Historial</span>
+  </button>
+  <button class="tab-btn" data-tab="dashboard" onclick="switchTab('dashboard',this)">
+    <span class="icon">📊</span><span>Dashboard</span>
+  </button>
+</nav>
+
+<!-- ════════════ APP ════════════ -->
+<main id="app">
+
+<!-- ══ TAB: NUEVO GV ══ -->
+<section class="tab-page active" id="tab-nuevo">
+
+  <!-- Número GV -->
+  <div class="card">
+    <div class="card-head ch-navy">
+      <span class="ico">🔖</span> Gerenciamiento de Viaje
+    </div>
+    <div class="card-body" style="text-align:center; padding:20px 16px">
+      <div style="font-size:11px;color:var(--mgray);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Número de GV</div>
+      <div id="gvNum" style="font-size:26px;font-weight:800;color:var(--navy);font-family:'SF Mono','Courier New',monospace;letter-spacing:1px">—</div>
+      <div id="gvTs" style="font-size:12px;color:var(--mgray);margin-top:4px"></div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 1: DATOS GENERALES -->
+  <div class="card">
+    <div class="card-head ch-navy"><span class="ico">📄</span> 1. Datos Generales del Viaje</div>
+    <div class="card-body">
+      <div class="field-grid">
+        <div class="field required"><label>Cliente</label><input id="f_cliente" value="SHAYA Ecuador S.A."></div>
+        <div class="field"><label>Bloque</label><input id="f_bloque" value="Bloque 61"></div>
+        <div class="field"><label>Campo</label><input id="f_campo"></div>
+        <div class="field"><label>Base</label><input id="f_base"></div>
+        <div class="field required"><label>Ruta</label><input id="f_ruta" placeholder="Coca → Bloque 61"></div>
+        <div class="field"><label>Destino</label><input id="f_destino"></div>
+        <div class="field">
+          <label>Tipo de Operación</label>
+          <select id="f_tipoOp">
+            <option>Despacho</option><option>Transporte</option>
+            <option>Abastecimiento</option><option>Retorno</option><option>Emergencia</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Tipo de Combustible</label>
+          <select id="f_combustible">
+            <option>Diesel</option><option>Gasolina Extra</option>
+            <option>Gasolina Súper</option><option>Jet A-1</option><option>Bunker</option>
+          </select>
+        </div>
+        <div class="field"><label>N° Orden Servicio</label><input id="f_orden"></div>
+        <div class="field"><label>Contrato</label><input id="f_contrato" value="CW3363578"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2: VEHÍCULO -->
+  <div class="card">
+    <div class="card-head ch-steel"><span class="ico">🚛</span> 2. Datos del Vehículo</div>
+    <div class="card-body">
+      <div class="field-grid">
+        <div class="field"><label>Tipo de Vehículo</label>
+          <select id="f_tipoVeh"><option>Cisterna</option><option>Camioneta Apoyo</option><option>Supervisión</option></select>
+        </div>
+        <div class="field required"><label>Placa</label><input id="f_placa" placeholder="ABC-1234"></div>
+        <div class="field"><label>Marca / Modelo</label><input id="f_marca" placeholder="MAN TGS"></div>
+        <div class="field"><label>Capacidad (gal)</label><input id="f_capacidad" type="number"></div>
+        <div class="field"><label>Kilómetro Inicial</label><input id="f_kmInicial" type="number"></div>
+        <div class="field"><label>Último Mantenimiento</label><input id="f_ultimoMant" type="date"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 3: CONDUCTOR -->
+  <div class="card">
+    <div class="card-head ch-navy"><span class="ico">👤</span> 3. Conductor y Responsables</div>
+    <div class="card-body">
+      <div class="field-grid">
+        <div class="field required"><label>Nombre Conductor</label><input id="f_conductor"></div>
+        <div class="field required"><label>Cédula</label><input id="f_cedula" type="tel"></div>
+        <div class="field"><label>N° Licencia</label><input id="f_licencia"></div>
+        <div class="field"><label>Tipo Licencia</label>
+          <select id="f_tipoLic"><option>E</option><option>D</option><option>C</option></select>
+        </div>
+        <div class="field"><label>Supervisor</label><input id="f_supervisor"></div>
+        <div class="field"><label>Coordinador</label><input id="f_coordinador" value="Alexander Crespo"></div>
+        <div class="field"><label>Gerente Aprobador</label><input id="f_gerente" value="Max Paliz"></div>
+        <div class="field"><label>Cargo</label><input id="f_cargo" value="Gerente General"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 4: ALCOHOLÍMETRO -->
+  <div class="card">
+    <div class="card-head ch-red"><span class="ico">🫁</span> 4. Prueba de Alcoholímetro</div>
+    <div class="card-body">
+      <div class="alco-display ok" id="alcoDisplay">
+        <div class="alco-value" id="alcoValue">0.00</div>
+        <div class="alco-unit">g/l — Aire espirado</div>
+        <div class="alco-status" id="alcoStatus">✅ CONFORME — 0.00 g/l</div>
+      </div>
+      <input type="range" class="alco-slider" id="alcoSlider"
+             min="0" max="0.80" step="0.01" value="0" oninput="updateAlco(this.value)">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--mgray);margin-bottom:12px">
+        <span>0.00 g/l</span><span>Límite 0.00 g/l</span><span>0.80 g/l</span>
+      </div>
+      <div class="field-grid cols3">
+        <div class="field"><label>Resultado</label><input id="f_alcohol" type="number" step="0.01" min="0" value="0.00" oninput="updateAlcoFromInput(this.value)"></div>
+        <div class="field"><label>Equipo</label><input id="f_equipoAlco" placeholder="Marca/modelo"></div>
+        <div class="field"><label>N° de Serie</label><input id="f_serieAlco"></div>
+      </div>
+      <div class="field" style="margin-top:8px"><label>Enlace fotografía (captura)</label>
+        <input id="f_fotoAlco" placeholder="https://... o descripción de archivo">
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 5: FATIGA -->
+  <div class="card">
+    <div class="card-head ch-blue"><span class="ico">😴</span> 5. Evaluación de Fatiga — Regla de las 16 Horas</div>
+    <div class="card-body">
+      <div id="fatigaContainer"></div>
+      <div class="divider"></div>
+      <div class="field-grid cols3" style="margin-top:8px">
+        <div class="field"><label>Horas dormidas</label><input id="f_hDorm" type="number" step="0.5" min="0" value="7" oninput="calcRiesgo()"></div>
+        <div class="field"><label>Horas despierto</label><input id="f_hDespierto" type="number" step="0.5" min="0" value="8" oninput="calcRiesgo()"></div>
+        <div class="field"><label>Última pausa (hrs)</label><input id="f_ultimaPausa" type="number" step="0.5" min="0" value="0"></div>
+      </div>
+      <div class="estado-banner estado-neutral" id="fatigaBanner" style="margin-top:12px">⏳ Completar evaluación</div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 6: CLIMA -->
+  <div class="card">
+    <div class="card-head ch-steel"><span class="ico">🌦</span> 6. Evaluación Climática y Vial</div>
+    <div class="card-body">
+      <div class="field-grid">
+        <div class="field">
+          <label>Condición Climática</label>
+          <select id="f_clima" onchange="evalClima()">
+            <option>Soleado</option><option>Lluvia leve</option>
+            <option>Lluvia intensa</option><option>Neblina</option>
+            <option>Tormenta eléctrica</option><option>Granizo</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Estado de la Vía</label>
+          <select id="f_via" onchange="evalClima()">
+            <option>Buena</option><option>Regular</option>
+            <option>Deteriorada</option><option>Derrumbe parcial</option><option>Vía cerrada</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Visibilidad</label>
+          <select id="f_visib" onchange="evalClima()">
+            <option>Óptima &gt;500m</option><option>Reducida 200-500m</option>
+            <option>Muy reducida &lt;200m</option><option>Nula</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Alerta INAMHI</label>
+          <select id="f_inamhi" onchange="evalClima()">
+            <option>Sin alerta</option><option>Alerta amarilla</option>
+            <option>Alerta naranja</option><option>Alerta roja</option>
+          </select>
+        </div>
+      </div>
+      <div class="estado-banner estado-neutral" id="climaBanner" style="margin-top:12px">⏳ Seleccionar condiciones</div>
+    </div>
+  </div>
+
+  <!-- Observaciones -->
+  <div class="card">
+    <div class="card-head ch-navy"><span class="ico">📝</span> Observaciones</div>
+    <div class="card-body">
+      <div class="field cols1">
+        <textarea id="f_obs" placeholder="Novedad, instrucción especial o condición particular del viaje..."></textarea>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══ TAB: RIESGOS ══ -->
+<section class="tab-page" id="tab-riesgos">
+  <div class="card">
+    <div class="card-head ch-red"><span class="ico">⚠️</span> 7. Matriz IPERC 5×5 — Evaluación de Riesgos</div>
+    <div class="card-body" style="padding:12px 10px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <span class="risk-pill risk-bajo">BAJO 1–4</span>
+        <span class="risk-pill risk-medio">MEDIO 5–9</span>
+        <span class="risk-pill risk-alto">ALTO 10–16</span>
+        <span class="risk-pill risk-critico">CRÍTICO ≥17</span>
+        <span style="font-size:11px;color:var(--mgray);align-self:center;margin-left:4px">Ingrese P y C (1–5). Riesgo = P × C</span>
+      </div>
+      <div class="tbl-wrap">
+        <table class="risk-table" id="riskTable">
+          <thead>
+            <tr>
+              <th>Factor de Riesgo</th>
+              <th>Cat.</th>
+              <th>P</th>
+              <th>C</th>
+              <th>P×C</th>
+              <th>Nivel</th>
+            </tr>
+          </thead>
+          <tbody id="riskBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TAB: DECISIÓN ══ -->
+<section class="tab-page" id="tab-decision">
+
+  <!-- Resumen riesgo -->
+  <div class="card">
+    <div class="card-head ch-navy"><span class="ico">📊</span> Resumen Ejecutivo de Riesgo</div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;text-align:center;margin-bottom:16px">
+        <div style="background:var(--xlight);border-radius:8px;padding:12px 8px">
+          <div style="font-size:24px;font-weight:800;color:var(--navy)" id="sumTotal">—</div>
+          <div style="font-size:10px;color:var(--mgray);text-transform:uppercase;letter-spacing:.5px">Total</div>
+        </div>
+        <div style="background:#FEE2E2;border-radius:8px;padding:12px 8px">
+          <div style="font-size:24px;font-weight:800;color:var(--red)" id="sumCriticos">—</div>
+          <div style="font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:.5px">Críticos</div>
+        </div>
+        <div style="background:#FFEDD5;border-radius:8px;padding:12px 8px">
+          <div style="font-size:24px;font-weight:800;color:var(--orange)" id="sumAltos">—</div>
+          <div style="font-size:10px;color:var(--orange);text-transform:uppercase;letter-spacing:.5px">Altos</div>
+        </div>
+        <div style="background:#FEF9C3;border-radius:8px;padding:12px 8px">
+          <div style="font-size:24px;font-weight:800;color:var(--yellow)" id="sumMedios">—</div>
+          <div style="font-size:10px;color:var(--yellow);text-transform:uppercase;letter-spacing:.5px">Medios</div>
+        </div>
+      </div>
+
+      <!-- Controles críticos -->
+      <div class="section-label">Estado de controles críticos</div>
+      <div id="controlStatus"></div>
+
+      <!-- Decisión final -->
+      <div class="estado-banner estado-neutral" id="decisionBanner" style="font-size:16px;padding:20px">
+        ⏳ Complete el formulario para ver la decisión
+      </div>
+    </div>
+  </div>
+
+  <!-- Botones de acción -->
+  <div class="card">
+    <div class="card-head ch-green"><span class="ico">🔖</span> Emitir / Registrar GV</div>
+    <div class="card-body">
+      <div class="btn-row" style="flex-direction:column">
+        <button class="btn btn-approve" id="btnAprobar" onclick="aprobarGV()">
+          ✅ APROBAR Y EMITIR GV
+        </button>
+        <button class="btn btn-reject" onclick="rechazarGV()">
+          ❌ RECHAZAR GV
+        </button>
+        <button class="btn btn-clear" onclick="limpiarFormulario()">
+          🔄 NUEVO GERENCIAMIENTO DE VIAJE
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exportar -->
+  <div class="card">
+    <div class="card-head ch-navy"><span class="ico">📤</span> Exportar</div>
+    <div class="card-body">
+      <div class="btn-row">
+        <button class="btn btn-export btn-sm" onclick="exportarPDF()">⎙ Imprimir / PDF</button>
+        <button class="btn btn-export btn-sm" onclick="exportarCSV()">📥 Exportar CSV</button>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══ TAB: HISTORIAL ══ -->
+<section class="tab-page" id="tab-historial">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <div style="font-size:16px;font-weight:700;color:var(--navy)">Historial de Viajes</div>
+    <button class="btn btn-export btn-sm" onclick="exportarCSV()">📥 CSV</button>
+  </div>
+  <div id="historialContainer">
+    <div style="text-align:center;padding:40px;color:var(--mgray)">
+      <div style="font-size:40px;margin-bottom:12px">🗄</div>
+      <div style="font-weight:600">Sin registros aún</div>
+      <div style="font-size:12px;margin-top:4px">Los GV aprobados y rechazados aparecerán aquí</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TAB: DASHBOARD ══ -->
+<section class="tab-page" id="tab-dashboard">
+  <div style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:14px">Dashboard Operacional</div>
+  <div class="kpi-grid" style="margin-bottom:16px">
+    <div class="kpi-card"><div class="kn">Total GV</div><div class="kv" id="dTotal">0</div><div class="ks">Gerenciamientos emitidos</div></div>
+    <div class="kpi-card kpi-green"><div class="kn">Aprobados</div><div class="kv" id="dAprobados">0</div><div class="ks">GV autorizados</div></div>
+    <div class="kpi-card kpi-red"><div class="kn">Rechazados</div><div class="kv" id="dRechazados">0</div><div class="ks">GV bloqueados</div></div>
+    <div class="kpi-card kpi-orange"><div class="kn">% Rechazo</div><div class="kv" id="dPctRechazo">0%</div><div class="ks">Meta: &lt; 5%</div></div>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi-card kpi-red"><div class="kn">Alcohol +</div><div class="kv" id="dAlcohol">0</div><div class="ks">Meta: 0 absoluto</div></div>
+    <div class="kpi-card kpi-orange"><div class="kn">Fatiga</div><div class="kv" id="dFatiga">0</div><div class="ks">Rechazos por fatiga</div></div>
+    <div class="kpi-card" style="border-top-color:var(--steel)"><div class="kn">Riesgo Prom.</div><div class="kv" id="dRiesgoProm">—</div><div class="ks">Promedio P×C por GV</div></div>
+    <div class="kpi-card" style="border-top-color:var(--steel)"><div class="kn">Riesgo Crítico</div><div class="kv" id="dCriticos">0</div><div class="ks">GV con nivel CRÍTICO</div></div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-head ch-navy"><span class="ico">📋</span> Últimos 5 registros</div>
+    <div class="card-body" id="dashRecientes" style="padding:8px 0">
+      <div style="text-align:center;padding:20px;color:var(--mgray);font-size:13px">Sin registros</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ════════════ MODAL GV APROBADO ════════════ -->
+<div class="modal-overlay" id="modalAprobado">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:56px">✅</div>
+      <div class="modal-title" style="text-align:center">GV EMITIDO</div>
+      <div id="modalGVNum" style="font-size:22px;font-weight:800;color:var(--navy);font-family:'SF Mono','Courier New',monospace;margin-bottom:8px"></div>
+      <div id="modalGVInfo" style="font-size:13px;color:var(--mgray);line-height:1.7"></div>
+    </div>
+    <div style="background:var(--grbg);border-radius:10px;padding:14px;font-size:13px;color:var(--green);font-weight:600;text-align:center;margin-bottom:16px">
+      El viaje ha sido autorizado. Registrado en historial.
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-export btn-sm" onclick="exportarPDF()">⎙ PDF</button>
+      <button class="btn btn-approve" onclick="closeModal('modalAprobado')">Aceptar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ MODAL RECHAZO ════════════ -->
+<div class="modal-overlay" id="modalRechazo">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:56px">❌</div>
+      <div class="modal-title" style="text-align:center;color:var(--red)">GV RECHAZADO</div>
+      <div id="modalRechInfo" style="font-size:13px;color:var(--mgray);line-height:1.7;margin-bottom:12px"></div>
+    </div>
+    <div class="field">
+      <label>Motivo del rechazo (requerido)</label>
+      <select id="motivoRechazo">
+        <option value="">Seleccionar motivo...</option>
+        <option>Alcoholemia positiva</option>
+        <option>Conductor no apto — fatiga</option>
+        <option>Condición climática crítica</option>
+        <option>Vehículo no conforme</option>
+        <option>Riesgo crítico no mitigado</option>
+        <option>Instrucción del cliente</option>
+        <option>Decisión del Gerente</option>
+        <option>Otro</option>
+      </select>
+    </div>
+    <div class="field" style="margin-top:10px">
+      <label>Observación adicional</label>
+      <textarea id="motivoObs" placeholder="Descripción del motivo..." style="min-height:56px"></textarea>
+    </div>
+    <div class="btn-row" style="margin-top:16px">
+      <button class="btn btn-clear btn-sm" onclick="closeModal('modalRechazo')">Cancelar</button>
+      <button class="btn btn-reject" onclick="confirmarRechazo()">Confirmar Rechazo</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ MODAL DETALLE ════════════ -->
+<div class="modal-overlay" id="modalDetalle">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modalDetalleTitle"></div>
+    <div id="modalDetalleBody" style="font-size:13px;color:var(--dgray);line-height:1.8"></div>
+    <button class="btn btn-clear" style="margin-top:16px" onclick="closeModal('modalDetalle')">Cerrar</button>
+  </div>
+</div>
+
+<!-- ════════════ TOAST ════════════ -->
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+//  DATA STORE — localStorage (compatible iPad Safari + desktop)
+// ══════════════════════════════════════════════════════════
+const LS_KEY  = 'gv_tecknologistic_viajes';
+const LS_SEQ  = 'gv_tecknologistic_seq';
+
+function openDB() {
+  // No se necesita inicialización — localStorage siempre disponible
+  return Promise.resolve();
+}
+
+function getNextNum() {
+  const seq = parseInt(localStorage.getItem(LS_SEQ) || '0') + 1;
+  localStorage.setItem(LS_SEQ, String(seq));
+  return Promise.resolve(seq);
+}
+
+function saveViaje(viaje) {
+  const viajes = _loadViajes();
+  viaje.id = Date.now();          // ID único por timestamp
+  viajes.push(viaje);
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(viajes));
+  } catch(e) {
+    // Si localStorage está lleno, eliminar los más antiguos
+    viajes.splice(0, Math.max(1, Math.floor(viajes.length * 0.2)));
+    localStorage.setItem(LS_KEY, JSON.stringify(viajes));
+  }
+  return Promise.resolve();
+}
+
+function getAllViajes() {
+  return Promise.resolve(_loadViajes());
+}
+
+function _loadViajes() {
+  try {
+    return JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+  } catch(e) {
+    return [];
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  MATRIZ DE RIESGOS
+// ══════════════════════════════════════════════════════════
+const RIESGOS = [
+  { factor: 'Fatiga del conductor',              cat: 'SST',     p: 2, c: 5 },
+  { factor: 'Alcohol y drogas',                  cat: 'SST',     p: 1, c: 5 },
+  { factor: 'Condiciones climáticas adversas',   cat: 'SST/Amb', p: 3, c: 4 },
+  { factor: 'Derrumbes en ruta',                 cat: 'SST',     p: 2, c: 4 },
+  { factor: 'Estado de la vía',                  cat: 'SST',     p: 2, c: 3 },
+  { factor: 'Visibilidad reducida',              cat: 'SST',     p: 3, c: 3 },
+  { factor: 'Conducción nocturna',               cat: 'SST',     p: 3, c: 3 },
+  { factor: 'Estado del vehículo',               cat: 'SST/Cal', p: 2, c: 4 },
+  { factor: 'Estado de llantas',                 cat: 'SST',     p: 2, c: 4 },
+  { factor: 'Sistema de frenos',                 cat: 'SST',     p: 1, c: 5 },
+  { factor: 'Sistema de luces',                  cat: 'SST',     p: 2, c: 3 },
+  { factor: 'GPS activo',                        cat: 'SST/Cal', p: 2, c: 3 },
+  { factor: 'GreenRoad activo',                  cat: 'SST/Cal', p: 2, c: 3 },
+  { factor: 'Cámara vehicular',                  cat: 'SST',     p: 2, c: 3 },
+  { factor: 'Comunicación / cobertura',          cat: 'SST',     p: 3, c: 3 },
+  { factor: 'Experiencia del conductor',         cat: 'SST',     p: 2, c: 3 },
+  { factor: 'Horas de conducción',               cat: 'SST',     p: 2, c: 4 },
+  { factor: 'Horas de descanso',                 cat: 'SST',     p: 2, c: 4 },
+  { factor: 'Riesgo de derrame (ambiental)',     cat: 'Amb',     p: 2, c: 5 },
+  { factor: 'Riesgo de incendio',                cat: 'SST/Amb', p: 1, c: 5 },
+  { factor: 'Riesgo de explosión',               cat: 'SST/Amb', p: 1, c: 5 },
+  { factor: 'Condiciones de la carga',           cat: 'Cal',     p: 2, c: 4 },
+  { factor: 'Tráfico en ruta',                   cat: 'SST',     p: 3, c: 2 },
+  { factor: 'Restricciones del cliente',         cat: 'Cal',     p: 2, c: 3 },
+  { factor: 'Uso de celular en movimiento',      cat: 'SST',     p: 2, c: 5 },
+  { factor: 'Exceso de velocidad',               cat: 'SST',     p: 2, c: 4 },
+  { factor: 'Derrumbe de carga (cisterna)',      cat: 'SST/Cal', p: 1, c: 4 },
+];
+
+// Copiar valores P/C editables
+let riskData = RIESGOS.map(r => ({ ...r }));
+
+function riskClass(val) {
+  if (val >= 17) return 'risk-critico';
+  if (val >= 10) return 'risk-alto';
+  if (val >= 5)  return 'risk-medio';
+  return 'risk-bajo';
+}
+function riskLabel(val) {
+  if (val >= 17) return '🔴 CRÍTICO';
+  if (val >= 10) return '🟠 ALTO';
+  if (val >= 5)  return '🟡 MEDIO';
+  return '🟢 BAJO';
+}
+
+function buildRiskTable() {
+  const tbody = document.getElementById('riskBody');
+  tbody.innerHTML = '';
+  riskData.forEach((r, i) => {
+    const score = r.p * r.c;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.factor}</td>
+      <td style="color:var(--mgray);font-size:11px">${r.cat}</td>
+      <td><input type="number" min="1" max="5" value="${r.p}" style="width:48px;text-align:center;border:1.5px solid var(--lgray);border-radius:6px;padding:5px 4px;font-size:13px;font-weight:700"
+          oninput="updateRisk(${i},'p',this.value)"></td>
+      <td><input type="number" min="1" max="5" value="${r.c}" style="width:48px;text-align:center;border:1.5px solid var(--lgray);border-radius:6px;padding:5px 4px;font-size:13px;font-weight:700"
+          oninput="updateRisk(${i},'c',this.value)"></td>
+      <td style="font-weight:800;font-size:15px;text-align:center" id="rscore${i}">${score}</td>
+      <td><span class="risk-pill ${riskClass(score)}" id="rnivel${i}">${riskLabel(score)}</span></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function updateRisk(i, field, val) {
+  const n = Math.min(5, Math.max(1, parseInt(val) || 1));
+  riskData[i][field] = n;
+  const score = riskData[i].p * riskData[i].c;
+  document.getElementById(`rscore${i}`).textContent = score;
+  const nivel = document.getElementById(`rnivel${i}`);
+  nivel.className = `risk-pill ${riskClass(score)}`;
+  nivel.textContent = riskLabel(score);
+  calcRiesgo();
+}
+
+// ══════════════════════════════════════════════════════════
+//  FATIGA
+// ══════════════════════════════════════════════════════════
+const FATIGA_QS = [
+  '¿Durmió más de 7 horas continuas en las últimas 24 horas?',
+  '¿Lleva menos de 16 horas despierto desde su último descanso?',
+  '¿Tomó un descanso de al menos 30 minutos en las últimas 8 horas?',
+  '¿Se siente descansado y apto para conducir?',
+  '¿No presenta somnolencia, mareos ni fatiga visible?',
+];
+let fatigaResp = [true, true, true, true, true];
+
+function buildFatiga() {
+  const c = document.getElementById('fatigaContainer');
+  c.innerHTML = FATIGA_QS.map((q, i) => `
+    <div class="fatiga-item">
+      <div class="fatiga-q">${q}</div>
+      <div class="toggle-group">
+        <button class="si ${fatigaResp[i] ? 'active' : ''}" onclick="setFatiga(${i},true,this)">Sí</button>
+        <button class="no ${!fatigaResp[i] ? 'active' : ''}" onclick="setFatiga(${i},false,this)">No</button>
+      </div>
+    </div>`).join('');
+}
+
+function setFatiga(i, val, btn) {
+  fatigaResp[i] = val;
+  const grp = btn.closest('.toggle-group');
+  grp.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  evalFatiga();
+  calcRiesgo();
+}
+
+function evalFatiga() {
+  const apto = fatigaResp.every(r => r);
+  const hDorm = parseFloat(document.getElementById('f_hDorm')?.value || 7);
+  const hDesp = parseFloat(document.getElementById('f_hDespierto')?.value || 8);
+  const regla16 = hDesp < 16;
+
+  const ok = apto && regla16 && hDorm >= 7;
+  const banner = document.getElementById('fatigaBanner');
+  if (ok) {
+    banner.className = 'estado-banner estado-ok';
+    banner.textContent = '✅ CONDUCTOR APTO — Evaluación de fatiga conforme';
+  } else {
+    banner.className = 'estado-banner estado-block';
+    if (!regla16) banner.textContent = `❌ CONDUCTOR NO APTO — ${hDesp}h despierto (máx. 16h)`;
+    else if (hDorm < 7) banner.textContent = `❌ CONDUCTOR NO APTO — Solo ${hDorm}h dormidas (mín. 7h)`;
+    else banner.textContent = '❌ CONDUCTOR NO APTO — Respuestas de fatiga insuficientes';
+  }
+  return ok;
+}
+
+// ══════════════════════════════════════════════════════════
+//  ALCOHOLÍMETRO
+// ══════════════════════════════════════════════════════════
+function updateAlco(val) {
+  const v = parseFloat(val) || 0;
+  document.getElementById('f_alcohol').value = v.toFixed(2);
+  renderAlco(v);
+}
+function updateAlcoFromInput(val) {
+  const v = parseFloat(val) || 0;
+  document.getElementById('alcoSlider').value = v;
+  renderAlco(v);
+}
+function renderAlco(v) {
+  const disp = document.getElementById('alcoDisplay');
+  document.getElementById('alcoValue').textContent = v.toFixed(2);
+  if (v > 0) {
+    disp.className = 'alco-display nok';
+    document.getElementById('alcoStatus').textContent = `🚫 NO CONFORME — ${v.toFixed(2)} g/l`;
+  } else {
+    disp.className = 'alco-display ok';
+    document.getElementById('alcoStatus').textContent = '✅ CONFORME — 0.00 g/l';
+  }
+  calcRiesgo();
+}
+
+// ══════════════════════════════════════════════════════════
+//  CLIMA
+// ══════════════════════════════════════════════════════════
+function evalClima() {
+  const clima  = document.getElementById('f_clima')?.value || '';
+  const via    = document.getElementById('f_via')?.value || '';
+  const inamhi = document.getElementById('f_inamhi')?.value || '';
+  const visib  = document.getElementById('f_visib')?.value || '';
+
+  const critico = ['Tormenta eléctrica','Granizo'].includes(clima) ||
+                  via === 'Vía cerrada' || inamhi === 'Alerta roja' ||
+                  visib === 'Nula';
+  const alto = ['Lluvia intensa','Neblina'].includes(clima) ||
+               via === 'Derrumbe parcial' || inamhi === 'Alerta naranja' ||
+               visib === 'Muy reducida <200m';
+  const medio = ['Lluvia leve'].includes(clima) || via === 'Deteriorada' ||
+                inamhi === 'Alerta amarilla';
+
+  const banner = document.getElementById('climaBanner');
+  if (critico) {
+    banner.className = 'estado-banner estado-block';
+    banner.textContent = '🔴 RIESGO CLIMÁTICO CRÍTICO — SUSPENDER SALIDA';
+  } else if (alto) {
+    banner.className = 'estado-banner estado-warn';
+    banner.textContent = '🟠 RIESGO CLIMÁTICO ALTO — Evaluar con Coordinador';
+  } else if (medio) {
+    banner.className = 'estado-banner';
+    banner.style.cssText = 'border-radius:10px;padding:16px 20px;margin:14px 0;font-weight:700;font-size:15px;text-align:center;border:2px solid var(--yellow);background:var(--ylbg);color:var(--yellow)';
+    banner.textContent = '🟡 RIESGO CLIMÁTICO MEDIO — Precaución en ruta';
+  } else {
+    banner.className = 'estado-banner estado-ok';
+    banner.style.cssText = '';
+    banner.textContent = '🟢 RIESGO CLIMÁTICO BAJO — Condiciones aceptables';
+  }
+  calcRiesgo();
+  return { critico, alto };
+}
+
+// ══════════════════════════════════════════════════════════
+//  CÁLCULO GLOBAL DE RIESGO
+// ══════════════════════════════════════════════════════════
+function calcRiesgo() {
+  const scores = riskData.map(r => r.p * r.c);
+  const total  = scores.reduce((a, b) => a + b, 0);
+  const criticos = scores.filter(s => s >= 17).length;
+  const altos    = scores.filter(s => s >= 10 && s < 17).length;
+  const medios   = scores.filter(s => s >= 5 && s < 10).length;
+  const prom     = (total / scores.length).toFixed(1);
+
+  document.getElementById('sumTotal').textContent    = total;
+  document.getElementById('sumCriticos').textContent = criticos;
+  document.getElementById('sumAltos').textContent    = altos;
+  document.getElementById('sumMedios').textContent   = medios;
+
+  const alc     = parseFloat(document.getElementById('f_alcohol')?.value || 0);
+  const fatOk   = evalFatiga();
+  const { critico: climaCrit } = evalClima();
+
+  // Control status
+  const controls = [
+    { label: 'Alcoholímetro 0,0 g/l', ok: alc === 0, blocker: true },
+    { label: 'Evaluación de fatiga', ok: fatOk, blocker: true },
+    { label: 'Condición climática', ok: !climaCrit, blocker: true },
+    { label: 'Sin riesgos CRÍTICOS', ok: criticos === 0, blocker: false },
+  ];
+
+  const csHtml = controls.map(ctrl => `
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--lgray)">
+      <span style="font-size:18px">${ctrl.ok ? '✅' : (ctrl.blocker ? '🚫' : '⚠️')}</span>
+      <span style="font-size:13px;flex:1;color:${ctrl.ok ? 'var(--green)' : (ctrl.blocker ? 'var(--red)' : 'var(--orange)')};font-weight:${ctrl.ok ? '500' : '700'}">${ctrl.label}</span>
+      <span style="font-size:11px;font-weight:700;color:${ctrl.ok ? 'var(--grmed)' : 'var(--red)'}">${ctrl.ok ? 'OK' : 'FALLA'}</span>
+    </div>`).join('');
+  document.getElementById('controlStatus').innerHTML = csHtml;
+
+  // Decisión
+  const bloqueado = alc > 0 || !fatOk || climaCrit;
+  const btnAprobar = document.getElementById('btnAprobar');
+  const decBanner  = document.getElementById('decisionBanner');
+
+  if (bloqueado) {
+    decBanner.className = 'estado-banner estado-block';
+    decBanner.textContent = '🔴 GV RECHAZADO — CONTROLES CRÍTICOS FALLIDOS';
+    decBanner.style.cssText = '';
+    btnAprobar.disabled = true;
+  } else if (criticos > 0) {
+    decBanner.className = 'estado-banner estado-warn';
+    decBanner.textContent = `🟠 RIESGO ALTO — ${criticos} factor(es) CRÍTICO(S). Requiere autorización del Gerente`;
+    decBanner.style.cssText = '';
+    btnAprobar.disabled = false;
+  } else if (parseFloat(prom) > 5) {
+    decBanner.className = 'estado-banner';
+    decBanner.style.cssText = 'border-radius:10px;padding:20px;font-weight:700;font-size:16px;text-align:center;border:2px solid var(--yellow);background:var(--ylbg);color:var(--yellow)';
+    decBanner.textContent = `🟡 RIESGO MEDIO — Aprobación del Coordinador requerida`;
+    btnAprobar.disabled = false;
+  } else {
+    decBanner.className = 'estado-banner estado-ok';
+    decBanner.style.cssText = '';
+    decBanner.textContent = '🟢 GV AUTORIZABLE — Riesgo bajo. Listo para emitir';
+    btnAprobar.disabled = false;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  APROBAR GV
+// ══════════════════════════════════════════════════════════
+async function aprobarGV() {
+  // Validar campos mínimos
+  const cliente    = document.getElementById('f_cliente').value.trim();
+  const ruta       = document.getElementById('f_ruta').value.trim();
+  const conductor  = document.getElementById('f_conductor').value.trim();
+  const cedula     = document.getElementById('f_cedula').value.trim();
+
+  if (!cliente || !ruta || !conductor || !cedula) {
+    showToast('Complete: Cliente, Ruta, Conductor y Cédula', 'err');
+    switchTab('nuevo', document.querySelector('[data-tab="nuevo"]'));
+    return;
+  }
+
+  const num    = await getNextNum();
+  const now    = new Date();
+  const mes    = String(now.getMonth()+1).padStart(2,'0');
+  const anio   = now.getFullYear();
+  const gvNum  = `GV-${anio}-${mes}-${String(num).padStart(5,'0')}`;
+
+  const scores  = riskData.map(r => r.p * r.c);
+  const total   = scores.reduce((a,b) => a+b, 0);
+  const prom    = (total / scores.length).toFixed(1);
+  const criticos = scores.filter(s => s >= 17).length;
+
+  const viaje = {
+    gvNum, fecha: now.toLocaleDateString('es-EC'),
+    hora: now.toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit'}),
+    timestamp: now.toISOString(), estado: 'APROBADO',
+    cliente, ruta,
+    conductor, cedula,
+    bloque:   document.getElementById('f_bloque').value,
+    campo:    document.getElementById('f_campo').value,
+    destino:  document.getElementById('f_destino').value,
+    tipoOp:   document.getElementById('f_tipoOp').value,
+    combustible: document.getElementById('f_combustible').value,
+    placa:    document.getElementById('f_placa').value,
+    marca:    document.getElementById('f_marca').value,
+    supervisor:   document.getElementById('f_supervisor').value,
+    coordinador:  document.getElementById('f_coordinador').value,
+    gerente:      document.getElementById('f_gerente').value,
+    alcohol:  parseFloat(document.getElementById('f_alcohol').value) || 0,
+    fatigaOk: fatigaResp.every(r => r),
+    clima:    document.getElementById('f_clima').value,
+    via:      document.getElementById('f_via').value,
+    inamhi:   document.getElementById('f_inamhi').value,
+    riesgoTotal: total, riesgoPromedio: parseFloat(prom),
+    criticos, altos: scores.filter(s=>s>=10&&s<17).length,
+    medios: scores.filter(s=>s>=5&&s<10).length,
+    obs:      document.getElementById('f_obs').value,
+  };
+
+  await saveViaje(viaje);
+
+  // Mostrar en UI
+  document.getElementById('gvNum').textContent = gvNum;
+  document.getElementById('gvTs').textContent  = `${viaje.fecha} · ${viaje.hora}`;
+  document.getElementById('gvBadgeTop').textContent = gvNum;
+  document.getElementById('gvBadgeTop').classList.add('visible');
+
+  document.getElementById('modalGVNum').textContent = gvNum;
+  document.getElementById('modalGVInfo').innerHTML  =
+    `<b>Conductor:</b> ${conductor}<br>` +
+    `<b>Ruta:</b> ${ruta}<br>` +
+    `<b>Vehículo:</b> ${viaje.placa || '—'}<br>` +
+    `<b>Fecha / Hora:</b> ${viaje.fecha} · ${viaje.hora}<br>` +
+    `<b>Riesgo Promedio:</b> ${prom} | <b>Factores CRÍTICOS:</b> ${criticos}`;
+
+  openModal('modalAprobado');
+  updateDashboard();
+  renderHistorial();
+}
+
+// ══════════════════════════════════════════════════════════
+//  RECHAZAR GV
+// ══════════════════════════════════════════════════════════
+function rechazarGV() {
+  const conductor = document.getElementById('f_conductor').value.trim();
+  const ruta      = document.getElementById('f_ruta').value.trim();
+  document.getElementById('modalRechInfo').innerHTML =
+    `<b>Conductor:</b> ${conductor || '—'}<br><b>Ruta:</b> ${ruta || '—'}`;
+  openModal('modalRechazo');
+}
+
+async function confirmarRechazo() {
+  const motivo = document.getElementById('motivoRechazo').value;
+  const obs    = document.getElementById('motivoObs').value;
+  if (!motivo) { showToast('Seleccione un motivo de rechazo', 'err'); return; }
+
+  const now  = new Date();
+  const mes  = String(now.getMonth()+1).padStart(2,'0');
+  const anio = now.getFullYear();
+  const num  = await getNextNum();
+  const gvNum = `GV-${anio}-${mes}-${String(num).padStart(5,'0')}-R`;
+
+  const viaje = {
+    gvNum, fecha: now.toLocaleDateString('es-EC'),
+    hora: now.toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit'}),
+    timestamp: now.toISOString(), estado: 'RECHAZADO',
+    conductor: document.getElementById('f_conductor').value,
+    cedula:    document.getElementById('f_cedula').value,
+    ruta:      document.getElementById('f_ruta').value,
+    cliente:   document.getElementById('f_cliente').value,
+    alcohol:   parseFloat(document.getElementById('f_alcohol').value)||0,
+    motivo:    motivo + (obs ? ` — ${obs}` : ''),
+    obs,
+  };
+
+  await saveViaje(viaje);
+  closeModal('modalRechazo');
+  showToast('GV rechazado y registrado en historial', 'err');
+  updateDashboard();
+  renderHistorial();
+}
+
+// ══════════════════════════════════════════════════════════
+//  LIMPIAR FORMULARIO
+// ══════════════════════════════════════════════════════════
+function limpiarFormulario() {
+  if (!confirm('¿Reiniciar formulario para un nuevo Gerenciamiento de Viaje?')) return;
+
+  // Campos de texto
+  ['f_campo','f_base','f_ruta','f_destino','f_orden',
+   'f_placa','f_marca','f_capacidad','f_kmInicial',
+   'f_conductor','f_cedula','f_licencia','f_supervisor','f_obs',
+   'f_equipoAlco','f_serieAlco','f_fotoAlco'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+
+  // Alcoholímetro
+  document.getElementById('f_alcohol').value = '0.00';
+  document.getElementById('alcoSlider').value = 0;
+  renderAlco(0);
+
+  // Fatiga
+  fatigaResp = [true, true, true, true, true];
+  buildFatiga();
+  document.getElementById('f_hDorm').value = 7;
+  document.getElementById('f_hDespierto').value = 8;
+  document.getElementById('f_ultimaPausa').value = 0;
+
+  // Clima
+  ['f_clima','f_via','f_visib','f_inamhi'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.selectedIndex = 0;
+  });
+
+  // Riesgos a defaults
+  riskData = RIESGOS.map(r => ({ ...r }));
+  buildRiskTable();
+
+  // GV badge
+  document.getElementById('gvNum').textContent = '—';
+  document.getElementById('gvTs').textContent  = '';
+  document.getElementById('gvBadgeTop').classList.remove('visible');
+
+  calcRiesgo();
+  evalFatiga();
+  evalClima();
+  switchTab('nuevo', document.querySelector('[data-tab="nuevo"]'));
+  showToast('Formulario reiniciado. Nuevo GV listo.', 'ok');
+}
+
+// ══════════════════════════════════════════════════════════
+//  HISTORIAL
+// ══════════════════════════════════════════════════════════
+async function renderHistorial() {
+  const viajes = (await getAllViajes()).reverse();
+  const c = document.getElementById('historialContainer');
+  if (!viajes.length) {
+    c.innerHTML = '<div style="text-align:center;padding:40px;color:var(--mgray)"><div style="font-size:40px;margin-bottom:12px">🗄</div><div style="font-weight:600">Sin registros aún</div></div>';
+    return;
+  }
+  c.innerHTML = viajes.map(v => `
+    <div class="hist-item ${v.estado==='APROBADO'?'approved':'rejected'}"
+         onclick="verDetalle(${v.id})">
+      <span class="hist-badge">${v.estado}</span>
+      <div class="hist-gv">${v.gvNum}</div>
+      <div class="hist-info">${v.conductor||'—'} · ${v.ruta||'—'}</div>
+      <div class="hist-info">${v.fecha} · ${v.hora} ${v.motivo ? '· '+v.motivo : ''}</div>
+    </div>`).join('');
+}
+
+async function verDetalle(id) {
+  const viajes = await getAllViajes();
+  const v = viajes.find(x => x.id === id);
+  if (!v) return;
+  document.getElementById('modalDetalleTitle').textContent = v.gvNum;
+  document.getElementById('modalDetalleBody').innerHTML = `
+    <table style="width:100%;border-collapse:collapse">
+      ${Object.entries({
+        'Estado': `<b style="color:${v.estado==='APROBADO'?'var(--green)':'var(--red)'}">${v.estado}</b>`,
+        'Fecha / Hora': `${v.fecha} · ${v.hora}`,
+        'Conductor': v.conductor||'—',
+        'Cédula': v.cedula||'—',
+        'Cliente': v.cliente||'—',
+        'Ruta': v.ruta||'—',
+        'Destino': v.destino||'—',
+        'Vehículo (Placa)': v.placa||'—',
+        'Tipo Operación': v.tipoOp||'—',
+        'Combustible': v.combustible||'—',
+        'Coordinador': v.coordinador||'—',
+        'Gerente': v.gerente||'—',
+        'Alcohol (g/l)': v.alcohol||'0.00',
+        'Fatiga': v.fatigaOk ? 'APTO' : 'NO APTO',
+        'Clima': v.clima||'—',
+        'Alerta INAMHI': v.inamhi||'—',
+        'Riesgo Total': v.riesgoTotal||'—',
+        'Riesgo Promedio': v.riesgoPromedio||'—',
+        'Factores Críticos': v.criticos||0,
+        'Observaciones': v.obs||v.motivo||'—',
+      }).map(([k,val]) => `
+        <tr>
+          <td style="padding:7px 0;font-size:12px;color:var(--mgray);font-weight:600;width:45%;border-bottom:1px solid var(--lgray)">${k}</td>
+          <td style="padding:7px 0;font-size:13px;border-bottom:1px solid var(--lgray)">${val}</td>
+        </tr>`).join('')}
+    </table>`;
+  openModal('modalDetalle');
+}
+
+// ══════════════════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════════════════
+async function updateDashboard() {
+  const viajes = await getAllViajes();
+  const total     = viajes.length;
+  const aprobados = viajes.filter(v => v.estado==='APROBADO').length;
+  const rechazados= viajes.filter(v => v.estado==='RECHAZADO').length;
+  const pctR      = total ? Math.round(rechazados/total*100) : 0;
+  const alcohol   = viajes.filter(v => v.estado==='RECHAZADO' && v.motivo?.includes('Alcohol')).length;
+  const fatiga    = viajes.filter(v => v.estado==='RECHAZADO' && v.motivo?.includes('fatiga')).length;
+  const criticos  = viajes.filter(v => v.criticos>0).length;
+  const proms     = viajes.filter(v=>v.riesgoPromedio).map(v=>v.riesgoPromedio);
+  const promedio  = proms.length ? (proms.reduce((a,b)=>a+b,0)/proms.length).toFixed(1) : '—';
+
+  document.getElementById('dTotal').textContent      = total;
+  document.getElementById('dAprobados').textContent  = aprobados;
+  document.getElementById('dRechazados').textContent = rechazados;
+  document.getElementById('dPctRechazo').textContent = pctR + '%';
+  document.getElementById('dAlcohol').textContent    = alcohol;
+  document.getElementById('dFatiga').textContent     = fatiga;
+  document.getElementById('dRiesgoProm').textContent = promedio;
+  document.getElementById('dCriticos').textContent   = criticos;
+
+  const recientes = viajes.slice(-5).reverse();
+  const dr = document.getElementById('dashRecientes');
+  if (!recientes.length) {
+    dr.innerHTML = '<div style="text-align:center;padding:20px;color:var(--mgray);font-size:13px">Sin registros</div>';
+  } else {
+    dr.innerHTML = recientes.map(v => `
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--lgray)">
+        <div style="flex:1">
+          <div style="font-size:12px;font-weight:700;font-family:'SF Mono','Courier New',monospace;color:var(--navy)">${v.gvNum}</div>
+          <div style="font-size:11px;color:var(--mgray)">${v.conductor||'—'} · ${v.fecha}</div>
+        </div>
+        <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;${v.estado==='APROBADO'?'background:var(--grbg);color:var(--green)':'background:var(--redbg);color:var(--red)'}">${v.estado}</span>
+      </div>`).join('');
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  EXPORTAR CSV
+// ══════════════════════════════════════════════════════════
+async function exportarCSV() {
+  const viajes = await getAllViajes();
+  if (!viajes.length) { showToast('Sin datos para exportar', 'err'); return; }
+  const keys = ['gvNum','fecha','hora','estado','conductor','cedula','cliente','ruta','destino',
+                 'tipoOp','combustible','placa','supervisor','coordinador','gerente',
+                 'alcohol','clima','inamhi','riesgoTotal','riesgoPromedio','criticos','obs'];
+  const header = keys.join(',');
+  const rows   = viajes.map(v => keys.map(k => `"${(v[k]??'').toString().replace(/"/g,'""')}"`).join(','));
+  const csv    = [header, ...rows].join('\n');
+  const blob   = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8' });
+  const url    = URL.createObjectURL(blob);
+  const a      = document.createElement('a');
+  a.href = url; a.download = `GV_TECKNOLOGISTIC_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+  showToast('CSV exportado correctamente', 'ok');
+}
+
+function exportarPDF() {
+  window.print();
+}
+
+// ══════════════════════════════════════════════════════════
+//  UI HELPERS
+// ══════════════════════════════════════════════════════════
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id === 'historial') renderHistorial();
+  if (id === 'dashboard') updateDashboard();
+  if (id === 'decision')  calcRiesgo();
+  window.scrollTo(0, 0);
+}
+
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+let toastTimer;
+function showToast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `show toast-${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = ''; }, 3000);
+}
+
+// Cerrar modales al tocar overlay
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeModal(overlay.id);
+  });
+});
+
+// ══════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════
+openDB().then(() => {
+  buildFatiga();
+  buildRiskTable();
+  evalClima();
+  evalFatiga();
+  calcRiesgo();
+  renderHistorial();
+  updateDashboard();
+
+  // Fecha/hora en GV
+  const now = new Date();
+  document.getElementById('gvTs').textContent =
+    now.toLocaleDateString('es-EC') + ' · ' + now.toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit'});
+}).catch(err => {
+  console.error('DB error:', err);
+  showToast('Error iniciando base de datos local', 'err');
+});
+</script>
+</body>
+</html>
